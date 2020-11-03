@@ -24,7 +24,7 @@ const OrderScreen = ({ match }) => {
   const {  loading: loadingDeliver, success: successDeliver } = orderDeliver;
 
   if (!loading) {
-    //Calculate price
+    // Calculate price
     order.itemsPrice = order.orderItems.reduce(
       (acc, item) => acc + item.price * item.qty,
       0
