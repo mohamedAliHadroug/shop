@@ -7,6 +7,8 @@ import {
   deleteProduct,
   createProduct,
   updateProduct,
+  createProductReview,
+  getTopProducts
 } from "../controllers/productController.js";
 
 const router = Router();
@@ -14,6 +16,18 @@ const router = Router();
 //@route Get /api/products  and POST /api/products
 //@access public for the creation of a product is private/admin
 router.route("/").get(getProducts).post(protect, admin, createProduct);
+
+
+// get top 3 rated product 
+//@route Get /api/products/top
+//@access public
+router.get('/top', getTopProducts)
+
+
+//@desc fetch all products and create a new rating of a product by the user
+//@route Get /api/products  and POST /api/products/:id/reviews
+//@access private for the creation of a rating  by the user
+router.route("/:id/reviews").post(protect, createProductReview)
 
 //@desc fetch single product wich can be deleted and updated by the admin only
 //@route Get /api/products/:id

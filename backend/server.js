@@ -3,6 +3,7 @@ import path from 'path'
 import dotenv from'dotenv'
 import connectDB from'./config/db.js'
 import colors from 'colors'
+import morgan from 'morgan'
 import ProductRoutes from './routes/ProductRoutes.js'
 import {notFound, errorHandler} from './middleware/errorMiddleWare.js'
 import UserRoutes from './routes/UserRoutes.js'
@@ -11,6 +12,14 @@ import uploadRoutes from './routes/uploadRoutes.js'
 
 
 const app = express()
+
+
+//use morgan in the local development only to get the http request
+if(process.env.NODE_ENV === 'developement'){
+    app.use(morgan('dev'))
+}
+ 
+
 dotenv.config()
 connectDB()
 
