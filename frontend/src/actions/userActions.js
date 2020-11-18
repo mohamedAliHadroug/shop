@@ -23,8 +23,9 @@ import {
   USER_UPDATE_REQUEST,
   USER_UPDATE_SUCCESS
 } from "../constants/userConstants";
-import {ORDER_LIST_MY_RESET} from '../constants/orderConstants'
+import { ORDER_LIST_MY_RESET} from '../constants/orderConstants'
 import axios from "axios";
+import { CART_RESET } from "../constants/cartConstants";
 
 export const login = (email, password) => async (dispatch) => {
   try {
@@ -59,12 +60,17 @@ export const login = (email, password) => async (dispatch) => {
 
 //logout action
 
-export const logout = () => (dispatch) => {
+export const logout = () => async (dispatch) => {
   localStorage.removeItem("userInfo");
   dispatch({ type: USER_LOGOUT });
   dispatch({ type: USER_DETAILS_RESET });
   dispatch({ type: ORDER_LIST_MY_RESET });
-  dispatch({ type: USER_LIST_RESET})
+  dispatch({ type: USER_LIST_RESET});
+  dispatch({ type: CART_RESET})
+  // localStorage.removeItem('shippingAddress');
+  // localStorage.clear(); //for localStorage
+  // sessionStorage.clear(); //for sessionStorage
+  // // window.location.reload();
 };
 
 //register a new user

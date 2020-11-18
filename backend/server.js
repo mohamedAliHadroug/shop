@@ -24,20 +24,33 @@ dotenv.config()
 connectDB()
 
 app.use(express.json())
-app.get('/', (req, res)=>{
-res.send('API is runing....bbbb')
-})
 
 app.use('/api/products', ProductRoutes)
 app.use('/api/users', UserRoutes)
 app.use('/api/orders', orderRoutes)
+
 //route to upload file
 app.use('/api/upload', uploadRoutes)
+
+//Paypal 
+app.get('/api/config/paypal', (req, res)=> res.send(process.env.PAYPAL_CLIENT_ID))
+
 //making the uploads file  static with express
 const __dirname= path.resolve()
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')))
-//Paypal 
-app.get('/api/config/paypal', (req, res)=> res.send(process.env.PAYPAL_CLIENT_ID))
+
+//prepaing the production mode for deployment
+if(process.env.NODE_ENV === 'production'){
+app.use(express.static(path.join(__dirname, '/frontend/build')))
+app.get('*', (req, res) => res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html')))
+} else {
+    app.get('/', (req, res)=>{
+        res.send('API is runing....')
+        })
+        
+}
+
+
 //fallback for 404 error
 app.use(notFound)
 //error custom handler

@@ -29,7 +29,7 @@ import {
 
 
 
-export const userLoginReducers = (state = {  }, action) => {
+export const userLoginReducers = (state = {}, action) => {
     switch (action.type) {
       case USER_LOGIN_REQUEST:
         return { loading: true };
@@ -38,13 +38,13 @@ export const userLoginReducers = (state = {  }, action) => {
       case USER_LOGIN_FAIL:
         return { loading: false, error: action.payload };
         case USER_LOGOUT:
-            return {  };
+            return {};
       default:
         return state;
     }
   };
 
-  export const userRegisterReducers = (state = {  }, action) => {
+  export const userRegisterReducers = (state = {}, action) => {
     switch (action.type) {
       case USER_REGISTER_REQUEST:
         return { loading: true };
@@ -73,12 +73,12 @@ export const userLoginReducers = (state = {  }, action) => {
     }
   };
 
-  export const userUpdateProfileReducers = (state = {  }, action) => {
+  export const userUpdateProfileReducers = (state = {}, action) => {
     switch (action.type) {
       case USER_UPDATE_PROFILE_REQUEST:
         return { loading: true };
       case USER_UPDATE_PROFILE_SUCCESS:
-        return { loading: false, success:true, userInfo: action.payload };
+        return { loading: false, success: true, userInfo: action.payload };
       case USER_UPDATE_PROFILE_FAIL:
         return { loading: false, error: action.payload };
       default:
