@@ -20,7 +20,7 @@ switch(action.type){
     case CART_SAVE_PAYMENT_METHOD :
         return {...state, paymentMethod:  action.payload}
     case CART_RESET:
-        return {cartItems:[], shippingAddress : {}}
+        return {...state, cartItems:[]}
     default : return state
 }
 }

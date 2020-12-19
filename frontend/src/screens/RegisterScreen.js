@@ -38,7 +38,7 @@ const RegisterScreen = ({ location, history }) => {
       <h1>Sign Up</h1>
       {message && <Message variant='danger'>{message}</Message>}
       {error && <Message variant='danger'>{error}</Message>}
-  {loading && <Loader />}
+      {loading && <Loader />}
       <Form onSubmit={submitHandler}>
       <Form.Group controlId="name">
           <Form.Label>Name :</Form.Label>
@@ -67,7 +67,7 @@ const RegisterScreen = ({ location, history }) => {
             onChange={(e) => setPassword(e.target.value)}
           ></Form.Control>
         </Form.Group>
-        <Form.Group controlId="confirmPassword">
+        <Form.Group controlId="confirm Password">
           <Form.Label> Confirm Password :</Form.Label>
           <Form.Control
             type="password"

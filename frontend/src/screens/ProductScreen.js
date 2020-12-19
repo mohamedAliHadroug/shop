@@ -34,6 +34,7 @@ const ProductScreen = ({ history, match }) => {
   const productReviewCreate = useSelector((state) => state.productReviewCreate);
   const {
     success: successProductReview,
+    loading: loadingProductReview,
     error: errorProductReview,
   } = productReviewCreate;
 
@@ -42,10 +43,12 @@ const ProductScreen = ({ history, match }) => {
       alert('Review Submitted!')
       setRating(0)
       setComment('')
-      dispatch({type: PRODUCT_CREATE_REVIEW_RESET})
     }
-    dispatch(listProductDetails(match.params.id));
-  }, [dispatch, match, successProductReview]);
+    if(!product._id || product._id !== match.params.id){
+      dispatch(listProductDetails(match.params.id));
+      dispatch({ type: PRODUCT_CREATE_REVIEW_RESET })
+    }
+  }, [dispatch, match, successProductReview, product._id]);
 
 
   const addToCartHandler = () => {
@@ -178,7 +181,7 @@ const ProductScreen = ({ history, match }) => {
                         <Form.Label>Comment</Form.Label>
                         <Form.Control as='textarea' row='3' value={comment} onChange={(e)=> setComment(e.target.value)}></Form.Control>
                       </Form.Group>
-                      <Button type='submit' variant='primary'> Submit </Button>
+                      <Button type='submit' variant='primary' disabled={loadingProductReview}> Submit </Button>
                     </Form>
                   ) : (
                     <Message>

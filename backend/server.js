@@ -12,16 +12,16 @@ import uploadRoutes from './routes/uploadRoutes.js'
 
 
 const app = express()
-
+dotenv.config()
+connectDB()
 
 //use morgan in the local development only to get the http request
-if(process.env.NODE_ENV === 'developement'){
+if(process.env.NODE_ENV === 'development'){
     app.use(morgan('dev'))
 }
  
 
-dotenv.config()
-connectDB()
+
 
 app.use(express.json())
 

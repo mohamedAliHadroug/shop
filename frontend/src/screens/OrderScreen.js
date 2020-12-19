@@ -40,7 +40,7 @@ const OrderScreen = ({ match, history }) => {
     order.itemsPrice = order.orderItems.reduce(
       (acc, item) => acc + item.price * item.qty,
       0
-    );
+    ).toFixed(2);
   }
   useEffect(() => {
     if (!userInfo) {
@@ -57,7 +57,7 @@ const OrderScreen = ({ match, history }) => {
       };
       document.body.appendChild(script);
     };
-    if (!order || successPay || successDeliver) {
+    if (!order || successPay || successDeliver || order._id !== orderId) {
       dispatch({ type: ORDER_PAY_RESET });
       dispatch({ type: ORDER_DELIVER_RESET });
       dispatch(getOrderDetails(orderId));

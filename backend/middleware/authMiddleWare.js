@@ -18,7 +18,7 @@ try {
 }
     } if (!token) {
                     res.status(401)
-                    throw new Error('Not authorized, no token')
+                    throw new Error('Not authorized, token failed')
                  }
 })
 
@@ -29,7 +29,7 @@ next()
 } else {
     //not athorized
     res.status(401)
-    throw new Error('Not authorized as an admin')
+    throw new Error('Not authorized, no token')
 }
 }
 

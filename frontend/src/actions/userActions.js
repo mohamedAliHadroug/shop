@@ -21,11 +21,11 @@ import {
   USER_DELETE_SUCCESS,
   USER_DELETE_FAIL,
   USER_UPDATE_REQUEST,
-  USER_UPDATE_SUCCESS
+  USER_UPDATE_SUCCESS,
+  USER_UPDATE_FAIL
 } from "../constants/userConstants";
 import { ORDER_LIST_MY_RESET} from '../constants/orderConstants'
 import axios from "axios";
-import { CART_RESET } from "../constants/cartConstants";
 
 export const login = (email, password) => async (dispatch) => {
   try {
@@ -61,16 +61,15 @@ export const login = (email, password) => async (dispatch) => {
 //logout action
 
 export const logout = () => async (dispatch) => {
-  localStorage.removeItem("userInfo");
-  dispatch({ type: USER_LOGOUT });
-  dispatch({ type: USER_DETAILS_RESET });
-  dispatch({ type: ORDER_LIST_MY_RESET });
-  dispatch({ type: USER_LIST_RESET});
-  dispatch({ type: CART_RESET})
-  // localStorage.removeItem('shippingAddress');
-  // localStorage.clear(); //for localStorage
-  // sessionStorage.clear(); //for sessionStorage
-  // // window.location.reload();
+  localStorage.removeItem('userInfo')
+  localStorage.removeItem('cartItems')
+  localStorage.removeItem('shippingAddress')
+  localStorage.removeItem('paymentMethod')
+  dispatch({ type: USER_LOGOUT })
+  dispatch({ type: USER_DETAILS_RESET })
+  dispatch({ type: ORDER_LIST_MY_RESET })
+  dispatch({ type: USER_LIST_RESET })
+  document.location.href = '/login'
 };
 
 //register a new user
@@ -122,7 +121,6 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
     } = getState();
     const config = {
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
@@ -132,12 +130,16 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
       payload: data,
     });
   } catch (error) {
-    dispatch({
-      type: USER_DETAILS_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
+    const message =
+    error.response && error.response.data.message
+      ? error.response.data.message
+      : error.message
+  if (message === 'Not authorized, token failed') {
+    dispatch(logout())
+  }
+  dispatch({
+    type: USER_DETAILS_FAIL,
+    payload: message,
     });
   }
 };
@@ -163,14 +165,23 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
       type: USER_UPDATE_PROFILE_SUCCESS,
       payload: data,
     });
-  } catch (error) {
     dispatch({
-      type: USER_UPDATE_PROFILE_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
+      type: USER_LOGIN_SUCCESS,
+      payload: data,
+    })
+    localStorage.setItem('userInfo', JSON.stringify(data))
+  } catch (error) {
+    const message =
+    error.response && error.response.data.message
+      ? error.response.data.message
+      : error.message
+  if (message === 'Not authorized, token failed') {
+    dispatch(logout())
+  }
+  dispatch({
+    type: USER_UPDATE_PROFILE_FAIL,
+    payload: message,
+  })
   }
 };
 
@@ -197,13 +208,17 @@ export const listUsers = () => async (dispatch, getState) => {
       payload: data,
     });
   } catch (error) {
-    dispatch({
-      type: USER_LIST_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
+    const message =
+    error.response && error.response.data.message
+      ? error.response.data.message
+      : error.message
+  if (message === 'Not authorized, token failed') {
+    dispatch(logout())
+  }
+  dispatch({
+    type: USER_LIST_FAIL,
+    payload: message,
+  })
   }
 };
 
@@ -226,13 +241,17 @@ export const deleteUser = (id) => async (dispatch, getState) => {
      await axios.delete(`/api/users/${id}`, config);
     dispatch({type: USER_DELETE_SUCCESS});
   } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message
+    if (message === 'Not authorized, token failed') {
+      dispatch(logout())
+    }
     dispatch({
       type: USER_DELETE_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
+      payload: message,
+    })
   }
 };
 
@@ -257,13 +276,18 @@ export const updateUser = (user) => async (dispatch, getState) => {
     const {data} = await axios.put(`/api/users/${user._id}`, user, config);
     dispatch({type: USER_UPDATE_SUCCESS});
     dispatch({type: USER_DETAILS_SUCCESS, payload: data})
+    dispatch({ type: USER_DETAILS_RESET })
   } catch (error) {
-    dispatch({
-      type: USER_DELETE_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
+    const message =
+    error.response && error.response.data.message
+      ? error.response.data.message
+      : error.message
+  if (message === 'Not authorized, token failed') {
+    dispatch(logout())
+  }
+  dispatch({
+    type: USER_UPDATE_FAIL,
+    payload: message,
+  })
   }
 };
